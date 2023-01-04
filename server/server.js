@@ -5,6 +5,7 @@ const swaggerUi = require('swagger-ui-express')
 const yaml = require('yamljs')
 const swaggerDocs = yaml.load('./swagger.yaml')
 const dbConnection = require('./database/connection')
+var path = require('path');
 
 dotEnv.config()
 
@@ -30,7 +31,7 @@ if (process.env.NODE_ENV !== 'production') {
 }
 
 app.get('/', (req, res, next) => {
-  res.send('Hello from my Express server v2!')
+  res.send('Hello from my Express server v2!');
 })
 
 app.listen(PORT, () => {
