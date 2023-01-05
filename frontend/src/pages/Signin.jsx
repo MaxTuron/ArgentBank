@@ -5,7 +5,7 @@ import "../styles/main.css"
 import imgBandeau from "../assets/argentBankLogo.png"
 
 async function loginUser(credentials) {
-  return fetch('http://localhost:3001/user/login', {
+  return fetch('http://localhost:3001/api/v1/user/login', {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json'
@@ -16,17 +16,26 @@ async function loginUser(credentials) {
  }
 
 export default function Signin() {
-  const [userEmail, setUserEmail] = useState();
-  const [password, setPassword] = useState();
+  const [userEmail, setUserEmail] = useState("");
+  const [password, setPassword] = useState("");
 
   const handleSubmit = async e => {
     e.preventDefault();
     const response = await loginUser({
-      userEmail,
-      password
-    });
-    console.log(response)
-    if ('accessToken' in response) {
+      "email": userEmail,
+      "password": password
+   });
+
+   try{
+      if(response.status === 200){
+        window.location.href = "/user";
+      }
+  } catch(err) {
+    console.log(err)
+    alert("Nom d'utilisateur ou mot de passe incorect !")
+  }
+    
+   /* if ('accessToken' in response) {
       alert("Success", response.message, "success", {
         buttons: false,
         timer: 2000,
@@ -39,6 +48,7 @@ export default function Signin() {
     } else {
       alert("Failed", response.message, "error");
     }
+    */
   }
 
   return (
@@ -62,11 +72,11 @@ export default function Signin() {
             <form onSubmit={handleSubmit}>
               <div className="input-wrapper">
                 <label htmlFor="username">Username</label>
-                <input type="text" id="username" onChange={e => setUserEmail(e.target.value)}/>
+                <input type="text" id="username" value={userEmail} onChange={e => setUserEmail(e.target.value)}/>
               </div>
               <div className="input-wrapper">
                 <label htmlFor="password">Password</label>
-                <input type="password" id="password" onChange={e => setPassword(e.target.value)} />
+                <input type="password" id="password" value={password} onChange={e => setPassword(e.target.value)} />
               </div>
               <div className="input-remember">
                 <input type="checkbox" id="remember-me"/>
