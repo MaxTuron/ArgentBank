@@ -14,7 +14,7 @@ root.render(
     <Routes>
       <Route path="/" element={<Accueil />} />
       <Route path="signin" element={<Signin />} />
-      <Route path="user" element={<User />} />
+      <Route path="profile" element={<User />} />
     </Routes>
   </BrowserRouter>,
 );

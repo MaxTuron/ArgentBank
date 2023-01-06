@@ -1,8 +1,44 @@
+import React, { useState } from 'react';
 import { Link } from "react-router-dom";
 import Footer from "../components/footer"
 import imgBandeau from "../assets/argentBankLogo.png"
 import "../styles/main.css"
+
+async function profileUser(infos) {
+  return fetch('http://localhost:3001/api/v1/user/profile', {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+      'Authorization': 'Bearer' + JSON.parse(localStorage.getItem('token')).token
+    },
+    body: JSON.stringify(infos)
+  })
+    .then(data => data.json())
+ }
+
+
 export default function User() {
+  const [userEmail, setUserEmail] = useState("");
+  const [firstName, setFirstName] = useState("");
+  const [lastName, setLastName] = useState("");
+
+  async function getResult(){
+    let response = await profileUser();
+    try{
+      if(response.status === 200){
+        setUserEmail(response.body.email);
+        setFirstName(response.body.firstName);
+        setLastName(response.body.lastName)
+        }else{
+          alert("Impossible de récupérer les données !")
+        }
+      } catch(err) {
+        console.log(err)
+      }
+  }
+
+  getResult();
+
   return (
   <div>
     <nav className="main-nav">
@@ -13,7 +49,7 @@ export default function User() {
       <div>
         <a className="main-nav-item" href="./user.html">
           <i className="fa fa-user-circle"></i>
-          Tony
+          {firstName}
         </a>
         <a className="main-nav-item" href="./index.html">
           <i className="fa fa-sign-out"></i>
@@ -23,7 +59,7 @@ export default function User() {
     </nav>
     <main className="main bg-dark">
       <div className="header">
-        <h1>Welcome back<br />Tony Jarvis!</h1>
+        <h1>Welcome back<br />{firstName} {lastName} !</h1>
         <button className="edit-button">Edit Name</button>
       </div>
       <h2 className="sr-only">Accounts</h2>

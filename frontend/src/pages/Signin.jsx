@@ -4,13 +4,13 @@ import Footer from "../components/footer"
 import "../styles/main.css"
 import imgBandeau from "../assets/argentBankLogo.png"
 
-async function loginUser(credentials) {
+async function loginUser(infos) {
   return fetch('http://localhost:3001/api/v1/user/login', {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json'
     },
-    body: JSON.stringify(credentials)
+    body: JSON.stringify(infos)
   })
     .then(data => data.json())
  }
@@ -28,27 +28,14 @@ export default function Signin() {
 
    try{
       if(response.status === 200){
-        window.location.href = "/user";
-      }
-  } catch(err) {
-    console.log(err)
-    alert("Nom d'utilisateur ou mot de passe incorect !")
-  }
-    
-   /* if ('accessToken' in response) {
-      alert("Success", response.message, "success", {
-        buttons: false,
-        timer: 2000,
-      })
-      .then((value) => {
-        localStorage.setItem('accessToken', response['accessToken']);
-        localStorage.setItem('user', JSON.stringify(response['user']));
+        localStorage.setItem("token", JSON.stringify(response.body))
         window.location.href = "/profile";
-      });
-    } else {
-      alert("Failed", response.message, "error");
-    }
-    */
+        }else{
+          alert("Nom d'utilisateur ou mot de passe incorect !")
+        }
+      } catch(err) {
+        console.log(err)
+      }
   }
 
   return (
