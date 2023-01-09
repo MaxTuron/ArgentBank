@@ -16,19 +16,36 @@ async function profileUser(infos) {
     .then(data => data.json())
  }
 
+ async function updateUser(infos) {
+  return fetch('http://localhost:3001/api/v1/user/profile', {
+    method: 'PUT',
+    headers: {
+      'Content-Type': 'application/json',
+      'Authorization': 'Bearer' + JSON.parse(localStorage.getItem('token')).token
+    },
+    body: JSON.stringify(infos)
+  })
+    .then(data => data.json())
+ }
+
+async function emptyStorage() {
+  localStorage.clear();
+ }
 
 export default function User() {
-  const [userEmail, setUserEmail] = useState("");
   const [firstName, setFirstName] = useState("");
   const [lastName, setLastName] = useState("");
+  const [actualFirstName, setactualFirstName] = useState("");
+  const [actualLastName, setactualLastName] = useState("");
 
   async function getResult(){
     let response = await profileUser();
     try{
       if(response.status === 200){
-        setUserEmail(response.body.email);
         setFirstName(response.body.firstName);
         setLastName(response.body.lastName)
+        setactualFirstName(response.body.firstName);
+        setactualLastName(response.body.lastName)
         }else{
           alert("Impossible de récupérer les données !")
         }
@@ -37,7 +54,27 @@ export default function User() {
       }
   }
 
-  getResult();
+  window.onload = function() {
+    getResult();
+  };
+
+  const handleSubmit = async e => {
+    e.preventDefault();
+    const response = await updateUser({
+      "firstName": firstName,
+      "lastName": lastName
+   });
+
+   try{
+    if(response.status === 200){
+      window.location.reload();
+      }else{
+        alert("Impossible de modifier votre nom !")
+      }
+    } catch(err) {
+      console.log(err)
+    }
+}
 
   return (
   <div>
@@ -49,18 +86,31 @@ export default function User() {
       <div>
         <a className="main-nav-item" href="./user.html">
           <i className="fa fa-user-circle"></i>
-          {firstName}
+          {actualFirstName}
         </a>
-        <a className="main-nav-item" href="./index.html">
+        <Link  to="/" onClick={emptyStorage}> 
           <i className="fa fa-sign-out"></i>
           Sign Out
-        </a>
+        </Link>
       </div>
     </nav>
     <main className="main bg-dark">
       <div className="header">
-        <h1>Welcome back<br />{firstName} {lastName} !</h1>
-        <button className="edit-button">Edit Name</button>
+        <h1>Welcome back<br />{actualFirstName} {actualLastName} !</h1>
+        
+        <form onSubmit={handleSubmit}>
+          <div className="input-wrapper">
+            <label htmlFor="firstname">First Name</label>
+            <input type="text" id="firstname" value={firstName} onChange={e => setFirstName(e.target.value)}/>
+          </div>
+          <div className="input-wrapper">
+            <label htmlFor="lastname">Last Name</label>
+            <input type="text" id="lastname" value={lastName} onChange={e => setLastName(e.target.value)} />
+          </div>
+
+          <button type="submit" className="edit-button">Edit Name</button>
+
+        </form>  
       </div>
       <h2 className="sr-only">Accounts</h2>
       <section className="account">
