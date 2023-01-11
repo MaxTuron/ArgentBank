@@ -3,17 +3,8 @@ import { Link } from "react-router-dom";
 import Footer from "../components/footer"
 import "../styles/main.css"
 import imgBandeau from "../assets/argentBankLogo.png"
+import {loginUser} from "../utils/fetchData"
 
-async function loginUser(infos) {
-  return fetch('http://localhost:3001/api/v1/user/login', {
-    method: 'POST',
-    headers: {
-      'Content-Type': 'application/json'
-    },
-    body: JSON.stringify(infos)
-  })
-    .then(data => data.json())
- }
 
 export default function Signin() {
   const [userEmail, setUserEmail] = useState("");
@@ -25,16 +16,11 @@ export default function Signin() {
       "email": userEmail,
       "password": password
    });
-
-   try{
-      if(response.status === 200){
-        localStorage.setItem("token", JSON.stringify(response.body))
-        window.location.href = "/profile";
-        }else{
-          alert("Nom d'utilisateur ou mot de passe incorect !")
-        }
-      } catch(err) {
-        console.log(err)
+    if(response.status === 200){
+      localStorage.setItem("token", JSON.stringify(response.body))
+      window.location.href = "/profile";
+      }else{
+        alert("Nom d'utilisateur ou mot de passe incorect !")
       }
   }
 

@@ -3,34 +3,7 @@ import { Link } from "react-router-dom";
 import Footer from "../components/footer"
 import imgBandeau from "../assets/argentBankLogo.png"
 import "../styles/main.css"
-
-async function profileUser(infos) {
-  return fetch('http://localhost:3001/api/v1/user/profile', {
-    method: 'POST',
-    headers: {
-      'Content-Type': 'application/json',
-      'Authorization': 'Bearer' + JSON.parse(localStorage.getItem('token')).token
-    },
-    body: JSON.stringify(infos)
-  })
-    .then(data => data.json())
- }
-
- async function updateUser(infos) {
-  return fetch('http://localhost:3001/api/v1/user/profile', {
-    method: 'PUT',
-    headers: {
-      'Content-Type': 'application/json',
-      'Authorization': 'Bearer' + JSON.parse(localStorage.getItem('token')).token
-    },
-    body: JSON.stringify(infos)
-  })
-    .then(data => data.json())
- }
-
-async function emptyStorage() {
-  localStorage.clear();
- }
+import {profileUser, updateUser, emptyStorage} from "../utils/fetchData"
 
 export default function User() {
   const [firstName, setFirstName] = useState("");
@@ -40,18 +13,11 @@ export default function User() {
 
   async function getResult(){
     let response = await profileUser();
-    try{
-      if(response.status === 200){
-        setFirstName(response.body.firstName);
-        setLastName(response.body.lastName)
-        setactualFirstName(response.body.firstName);
-        setactualLastName(response.body.lastName)
-        }else{
-          alert("Impossible de récupérer les données !")
-        }
-      } catch(err) {
-        console.log(err)
-      }
+      setFirstName(response.body.firstName);
+      setLastName(response.body.lastName)
+      setactualFirstName(response.body.firstName);
+      setactualLastName(response.body.lastName)
+
   }
 
   window.onload = function() {
@@ -63,18 +29,13 @@ export default function User() {
     const response = await updateUser({
       "firstName": firstName,
       "lastName": lastName
-   });
-
-   try{
+    });
     if(response.status === 200){
       window.location.reload();
       }else{
         alert("Impossible de modifier votre nom !")
       }
-    } catch(err) {
-      console.log(err)
-    }
-}
+  }
 
   return (
   <div>
