@@ -3,10 +3,12 @@ import { Link } from "react-router-dom";
 import Footer from "../components/footer"
 import "../styles/main.css"
 import imgBandeau from "../assets/argentBankLogo.png"
-import {loginUser} from "../utils/fetchData"
-
+import { loginUser}  from "../utils/fetchData"
+import { useDispatch } from 'react-redux';
+import { userToken } from "../store"
 
 export default function Signin() {
+  const dispatch = useDispatch();
   const [userEmail, setUserEmail] = useState("");
   const [password, setPassword] = useState("");
 
@@ -17,6 +19,7 @@ export default function Signin() {
       "password": password
    });
     if(response.status === 200){
+      dispatch(userToken(response.body.token));
       localStorage.setItem("token", JSON.stringify(response.body))
       window.location.href = "/profile";
       }else{

@@ -4,8 +4,11 @@ import Footer from "../components/footer"
 import imgBandeau from "../assets/argentBankLogo.png"
 import "../styles/main.css"
 import {profileUser, updateUser, emptyStorage} from "../utils/fetchData"
+import { useSelector } from "react-redux"
 
 export default function User() {
+  const token = useSelector(state => state.token.token)
+  console.log(token)
   const [firstName, setFirstName] = useState("");
   const [lastName, setLastName] = useState("");
   const [actualFirstName, setactualFirstName] = useState("");
@@ -17,7 +20,6 @@ export default function User() {
       setLastName(response.body.lastName)
       setactualFirstName(response.body.firstName);
       setactualLastName(response.body.lastName)
-
   }
 
   window.onload = function() {
