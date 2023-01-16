@@ -2,17 +2,19 @@ import { Link } from "react-router-dom";
 import imgBandeau from "../assets/argentBankLogo.png"
 import { useSelector } from "react-redux"
 import { useDispatch } from 'react-redux';
-import { isLoggedIn } from "../store"
+import { isLoggedIn, userLogout } from "../store"
 import { useNavigate } from 'react-router-dom';
 
 export default function Header() {
     const dispatch = useDispatch();
     const navigate = useNavigate();
-    const userLogged = useSelector(state => state.isLoggedIn);
+    let userLogged = useSelector(state => state.isLoggedIn.isLoggedIn);
+    console.log(userLogged)
 
     function logOut(){
-        dispatch(isLoggedIn())
-        navigate('/');
+      dispatch(userLogout())
+      dispatch(isLoggedIn())
+      navigate('/');
     }
 
     return (
@@ -23,8 +25,9 @@ export default function Header() {
             </Link>
           <div>
             {userLogged ? 
-             <Link  to="/signin"> Sign In <i className="fa fa-user-circle"></i> </Link>  :  <Link  to="/" onClick={logOut}> <i className="fa fa-sign-out"></i> Sign Out</Link>
+               <Link  to="/" onClick={logOut}> <i className="fa fa-sign-out"></i> Sign Out</Link> : <Link  to="/signin"> Sign In <i className="fa fa-user-circle"></i> </Link>
             }
+         
           </div>
         </nav>
     );

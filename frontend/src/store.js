@@ -6,7 +6,6 @@ const persistConfig ={
     key: 'main-root',
     storage
 }
-
 const initialState = {
     isLoggedIn: false,
     token: "",
@@ -14,22 +13,23 @@ const initialState = {
     lastName: ""
 };
 
-export const isLoggedIn = () => ({ type: 'isLoggedIn' });
 
+export const isLoggedIn = () => ({ type: 'isLoggedIn' });
+export const userLogout = () => ({ type: 'userLogout' });
 export const userFirstName = (firstName) => ({ 
     type: 'firstName',
     payload: {firstName: firstName},
 });
-
 export const userLastName = (lastName) => ({ 
     type: 'lastName',
     payload: {lastName: lastName},
 });
-
 export const userToken = (token) => ({
     type: "userToken",
     payload: { token: token },
   });
+
+
 
 const reducer = combineReducers({
     isLoggedIn: login_reducer,
@@ -38,8 +38,15 @@ const reducer = combineReducers({
     lastName: lastName_reducer,
     });
 
-const persistedReducer = persistReducer(persistConfig, reducer);
-   
+    const rootReducer = (state, action) => {
+        if (action.type === 'userLogout') {
+          state = undefined;
+        }
+        return reducer(state, action);
+      };
+
+const persistedReducer = persistReducer(persistConfig, rootReducer);
+
 function token_reducer(state = initialState, action) {
     let res = action.payload
     if (action.type === "userToken") {
@@ -53,7 +60,9 @@ function token_reducer(state = initialState, action) {
     function login_reducer(state = initialState, action) {
         let res = action.payload
         if (action.type === "userToken") {
-            return !res.isLoggedIn
+            return {
+                isLoggedIn: !res.isLoggedIn
+            };
         } 
         return state
     }
