@@ -1,7 +1,6 @@
-import { Link } from "react-router-dom";
 import Footer from "../components/footer"
 import "../styles/main.css"
-import imgBandeau from "../assets/argentBankLogo.png"
+import Header from "../components/header"
 import iconChat from "../assets/icon-chat.png"
 import iconMoney from "../assets/icon-money.png"
 import iconSecurity from "../assets/icon-security.png"
@@ -9,19 +8,7 @@ import iconSecurity from "../assets/icon-security.png"
 export default function Accueil() {
   return (
       <div>
-        <nav className="main-nav">
-        <Link  to="/">        
-                <img className="main-nav-logo-image" src={imgBandeau} alt="Argent Bank Logo" />
-                <h1 className="sr-only">Argent Bank</h1>
-            </Link>
-          <div>
-            <Link  to="/signin">
-              Sign In
-              <i className="fa fa-user-circle"></i>
-            </Link>
-            
-          </div>
-        </nav>
+        <Header/>
         <main>
           <div className="hero">
             <section className="hero-content">

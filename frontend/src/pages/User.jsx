@@ -1,38 +1,74 @@
-import React, { useState } from 'react';
-import { Link } from "react-router-dom";
+import React, { useState, useEffect  } from 'react';
 import Footer from "../components/footer"
-import imgBandeau from "../assets/argentBankLogo.png"
+import Header from "../components/header"
 import "../styles/main.css"
-import {profileUser, updateUser, emptyStorage} from "../utils/fetchData"
+import { useDispatch } from 'react-redux';
+import { userFirstName, userLastName} from "../store"
 import { useSelector } from "react-redux"
 
 export default function User() {
+  const dispatch = useDispatch();
   const token = useSelector(state => state.token.token)
-  console.log(token)
-  const [firstName, setFirstName] = useState("");
-  const [lastName, setLastName] = useState("");
-  const [actualFirstName, setactualFirstName] = useState("");
-  const [actualLastName, setactualLastName] = useState("");
+  const firstName = useSelector(state => state.firstName.firstName)
+  const lastName = useSelector(state => state.lastName.lastName)
+  const [newFirstName, setNewFirstName] = useState("");
+  const [newLastName, setNewLastName] = useState("");
 
-  async function getResult(){
-    let response = await profileUser();
-      setFirstName(response.body.firstName);
-      setLastName(response.body.lastName)
-      setactualFirstName(response.body.firstName);
-      setactualLastName(response.body.lastName)
+  useEffect(() => {
+    profileUser();
+    // eslint-disable-next-line
+  }, []);
+
+  async function profileUser() {
+    let response;
+    try { response = await fetch('http://localhost:3001/api/v1/user/profile', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': 'Bearer' + token
+      }
+    })
+      .then(data => data.json())
+      .then((response) => {
+        dispatch(userFirstName(response.body.firstName));
+        dispatch(userLastName(response.body.lastName));
+        setNewFirstName(response.body.firstName)
+        setNewLastName(response.body.lastName)
+      })
+    } catch(err){
+      window.location.href="http://localhost:3000/error500"
+      console.log(err)
+    }
+  return response;
   }
 
-  window.onload = function() {
-    getResult();
-  };
+  async function updateUser(infos) {
+    let response;
+    try { response = await fetch('http://localhost:3001/api/v1/user/profile', {
+      method: 'PUT',
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': 'Bearer' + token
+      },
+      body: JSON.stringify(infos)
+    })
+      .then(data => data.json())
+   } catch(err){
+    console.log(err)
+   }
+   return response;
+  }
 
   const handleSubmit = async e => {
     e.preventDefault();
     const response = await updateUser({
-      "firstName": firstName,
-      "lastName": lastName
+      "firstName": newFirstName,
+      "lastName": newLastName
     });
+    console.log(response)
     if(response.status === 200){
+      dispatch(userFirstName(response.body.firstName));
+      dispatch(userLastName(response.body.lastName));
       window.location.reload();
       }else{
         alert("Impossible de modifier votre nom !")
@@ -41,34 +77,19 @@ export default function User() {
 
   return (
   <div>
-    <nav className="main-nav">
-        <Link  to="/">        
-            <img className="main-nav-logo-image" src={imgBandeau} alt="Argent Bank Logo" />
-            <h1 className="sr-only">Argent Bank</h1>
-        </Link>
-      <div>
-        <a className="main-nav-item" href="./user.html">
-          <i className="fa fa-user-circle"></i>
-          {actualFirstName}
-        </a>
-        <Link  to="/" onClick={emptyStorage}> 
-          <i className="fa fa-sign-out"></i>
-          Sign Out
-        </Link>
-      </div>
-    </nav>
+    <Header/>
     <main className="main bg-dark">
       <div className="header">
-        <h1>Welcome back<br />{actualFirstName} {actualLastName} !</h1>
+        <h1>Welcome back<br />{firstName} {lastName} !</h1>
         
         <form onSubmit={handleSubmit}>
           <div className="input-wrapper">
             <label htmlFor="firstname">First Name</label>
-            <input type="text" id="firstname" value={firstName} onChange={e => setFirstName(e.target.value)}/>
+            <input type="text" id="firstname" value={newFirstName} onChange={e =>  setNewFirstName(e.target.value)}/>
           </div>
           <div className="input-wrapper">
             <label htmlFor="lastname">Last Name</label>
-            <input type="text" id="lastname" value={lastName} onChange={e => setLastName(e.target.value)} />
+            <input type="text" id="lastname" value={newLastName} onChange={e => setNewLastName(e.target.value)} />
           </div>
 
           <button type="submit" className="edit-button">Edit Name</button>

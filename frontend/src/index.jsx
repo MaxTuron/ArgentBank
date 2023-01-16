@@ -1,11 +1,8 @@
 import ReactDOM from 'react-dom/client';
-import {
-  BrowserRouter,
-  Routes,
-  Route,
-} from "react-router-dom";
+import {BrowserRouter, Routes, Route} from "react-router-dom";
 import { Provider } from 'react-redux';
-import { store } from './store';
+import { store, persistStor } from './store';
+import { PersistGate } from 'redux-persist/integration/react';
 import Accueil from "./pages/Accueil";
 import Signin from "./pages/Signin";
 import User from "./pages/User"
@@ -15,6 +12,7 @@ import Error500 from "./pages/Error500"
 const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(
   <Provider store={store}>
+    <PersistGate persistor={persistStor}>
     <BrowserRouter>
       <Routes>
         <Route path="/" element={<Accueil />} />
@@ -24,5 +22,6 @@ root.render(
         <Route path="*" element={<Error404 />} />
       </Routes>
     </BrowserRouter>
+    </PersistGate>
   </Provider>,
 );
