@@ -6,6 +6,7 @@ import { PersistGate } from 'redux-persist/integration/react';
 import Accueil from "./pages/Accueil";
 import Signin from "./pages/Signin";
 import User from "./pages/User"
+import Error401 from "./pages/Error401"
 import Error404 from "./pages/Error404"
 import Error500 from "./pages/Error500"
 
@@ -19,6 +20,7 @@ root.render(
         <Route path="signin" element={<Signin />} />
         <Route path="profile" element={<User />} />
         <Route path="error500" element={<Error500 />} />
+        <Route path="error401" element={<Error401 />} />
         <Route path="*" element={<Error404 />} />
       </Routes>
     </BrowserRouter>

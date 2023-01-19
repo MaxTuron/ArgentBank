@@ -1,4 +1,4 @@
-import React, { useState, useEffect  } from 'react';
+import React, { useState, useEffect } from 'react';
 import Footer from "../components/footer"
 import Header from "../components/header"
 import "../styles/main.css"
@@ -19,6 +19,11 @@ export default function User() {
     // eslint-disable-next-line
   }, []);
 
+  function catchError( err ){
+    console.log(err)
+    window.location.href="http://localhost:3000/error401"
+}
+
   async function profileUser() {
     let response;
     try { response = await fetch('http://localhost:3001/api/v1/user/profile', {
@@ -29,15 +34,19 @@ export default function User() {
       }
     })
       .then(data => data.json())
-      .then((response) => {
-        dispatch(userFirstName(response.body.firstName));
-        dispatch(userLastName(response.body.lastName));
-        setNewFirstName(response.body.firstName)
-        setNewLastName(response.body.lastName)
+      .then(response => {
+        if(response.status === 401){
+          catchError( response );
+        } else {
+          dispatch(userFirstName(response.body.firstName));
+          dispatch(userLastName(response.body.lastName));
+          setNewFirstName(response.body.firstName)
+          setNewLastName(response.body.lastName)
+        }
+      
       })
     } catch(err){
-      window.location.href="http://localhost:3000/error500"
-      console.log(err)
+      catchError();
     }
   return response;
   }
@@ -61,19 +70,32 @@ export default function User() {
 
   const handleSubmit = async e => {
     e.preventDefault();
-    const response = await updateUser({
-      "firstName": newFirstName,
-      "lastName": newLastName
-    });
-    console.log(response)
-    if(response.status === 200){
-      dispatch(userFirstName(response.body.firstName));
-      dispatch(userLastName(response.body.lastName));
-      window.location.reload();
-      }else{
-        alert("Impossible de modifier votre nom !")
-      }
+      const response = await updateUser({
+        "firstName": newFirstName,
+        "lastName": newLastName
+      });
+      if(response.status === 200){
+        dispatch(userFirstName(response.body.firstName));
+        dispatch(userLastName(response.body.lastName));
+        window.location.reload();
+        }else{
+          alert("Impossible de modifier votre nom !")
+        }
   }
+  const [values, setValues] = useState(firstName, lastName);
+
+  const handleChange = (e) => {
+    const { name, value } = e.target;
+    setValues({
+      ...values,
+      [name]: value,
+    });
+  };
+
+  useEffect(() => {
+    setNewFirstName(values.firstName)
+    setNewLastName(values.lastName)
+  }, [values]);
 
   return (
   <div>
@@ -83,17 +105,18 @@ export default function User() {
         <h1>Welcome back<br />{firstName} {lastName} !</h1>
         
         <form onSubmit={handleSubmit}>
-          <div className="input-wrapper">
-            <label htmlFor="firstname">First Name</label>
-            <input type="text" id="firstname" value={newFirstName} onChange={e =>  setNewFirstName(e.target.value)}/>
+          <div className='displayInput'>
+            <div className="input-wrapper">
+              <label htmlFor="firstname">First Name</label>
+              <input type="text" name='firstName' id="firstname" placeholder={firstName} onChange={handleChange}/>
+            </div>
+            <div className="input-wrapper">
+              <label htmlFor="lastname">Last Name</label>
+              <input type="text" name='lastName' id="lastname" placeholder={lastName} onChange={handleChange} />
+            </div>
           </div>
-          <div className="input-wrapper">
-            <label htmlFor="lastname">Last Name</label>
-            <input type="text" id="lastname" value={newLastName} onChange={e => setNewLastName(e.target.value)} />
-          </div>
-
-          <button type="submit" className="edit-button">Edit Name</button>
-
+          <button type="submit" className="edit-button">Save</button>
+          <button type="reset" className="edit-button">Cancel</button>
         </form>  
       </div>
       <h2 className="sr-only">Accounts</h2>

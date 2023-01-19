@@ -99,6 +99,16 @@ html {
     margin-bottom: 0;
     font-size: 0.9rem;
   }
+
+  .displayInput {
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+  }
+
+  .input-wrapper{
+    padding-left: 25px;
+  }
   
   @media (min-width: 920px) {
     .hero {

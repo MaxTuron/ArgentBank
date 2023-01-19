@@ -1,5 +1,3 @@
-
-
 export async function loginUser(infos) {
   let response;
   try { response = await fetch('http://localhost:3001/api/v1/user/login', {

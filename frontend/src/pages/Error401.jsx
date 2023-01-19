@@ -8,8 +8,8 @@ export default function Error() {
             <Header/>
             <main className="errorPage font-link">
                 <div>
-                    <p className="code404">404</p>
-                    <p className="errorText">The requested user does not exist.</p>
+                    <p className="code404">401</p>
+                    <p className="errorText">You are not authorized to access this page. Please login.</p>
                 </div>
                 <div>
                     <Link className="indexRedirect" to="/">Retourner sur la page d'accueil</Link>

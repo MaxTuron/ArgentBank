@@ -13,7 +13,6 @@ const initialState = {
     lastName: ""
 };
 
-
 export const isLoggedIn = () => ({ type: 'isLoggedIn' });
 export const userLogout = () => ({ type: 'userLogout' });
 export const userFirstName = (firstName) => ({ 
@@ -28,8 +27,6 @@ export const userToken = (token) => ({
     type: "userToken",
     payload: { token: token },
   });
-
-
 
 const reducer = combineReducers({
     isLoggedIn: login_reducer,
