@@ -11,6 +11,7 @@ export default function User() {
   const token = useSelector(state => state.token.token)
   const firstName = useSelector(state => state.firstName.firstName)
   const lastName = useSelector(state => state.lastName.lastName)
+  const [values, setValues] = useState(firstName, lastName);
   const [newFirstName, setNewFirstName] = useState("");
   const [newLastName, setNewLastName] = useState("");
 
@@ -82,8 +83,7 @@ export default function User() {
           alert("Impossible de modifier votre nom !")
         }
   }
-  const [values, setValues] = useState(firstName, lastName);
-
+  
   const handleChange = (e) => {
     const { name, value } = e.target;
     setValues({

@@ -11,7 +11,7 @@ export default function Error() {
                     <p className="errorText">Internal server error</p>
                 </div>
                 <div>
-                    <Link className="indexRedirect" to="/">Retourner sur la page d'accueil</Link>
+                    <Link className="indexRedirect" to="/">Back to home page</Link>
                 </div>
             </main>
         </div>

@@ -12,7 +12,7 @@ export default function Error() {
                     <p className="errorText">You are not authorized to access this page. Please login.</p>
                 </div>
                 <div>
-                    <Link className="indexRedirect" to="/">Retourner sur la page d'accueil</Link>
+                    <Link className="indexRedirect" to="/">Back to home page</Link>
                 </div>
             </main>
         </div>
