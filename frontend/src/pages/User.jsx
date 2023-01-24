@@ -75,12 +75,16 @@ export default function User() {
         "firstName": newFirstName,
         "lastName": newLastName
       });
-      if(response.status === 200){
-        dispatch(userFirstName(response.body.firstName));
-        dispatch(userLastName(response.body.lastName));
-        window.location.reload();
-        }else{
-          alert("Impossible de modifier votre nom !")
+      if(response.status === 200 && (response.body.firstName === "" || response.body.lastName === "")){
+        alert("Impossible to modify your name!")
+        }else if (response.status === 200 && response.body.firstName !== null && response.body.lastName !== null){
+          console.log(response.body.firstName)
+          console.log(response.body.lastName)
+          dispatch(userFirstName(response.body.firstName));
+          dispatch(userLastName(response.body.lastName));
+          window.location.reload();
+        }else {
+          alert("Impossible to modify your name!")
         }
   }
   

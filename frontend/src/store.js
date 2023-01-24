@@ -35,12 +35,12 @@ const reducer = combineReducers({
     lastName: lastName_reducer,
     });
 
-    const rootReducer = (state, action) => {
-        if (action.type === 'userLogout') {
-          state = undefined;
-        }
-        return reducer(state, action);
-      };
+const rootReducer = (state, action) => {
+    if (action.type === 'userLogout') {
+        state = undefined;
+    }
+    return reducer(state, action);
+};
 
 const persistedReducer = persistReducer(persistConfig, rootReducer);
 
@@ -54,35 +54,35 @@ function token_reducer(state = initialState, action) {
     return state;
 }
 
-    function login_reducer(state = initialState, action) {
-        let res = action.payload
-        if (action.type === "userToken") {
-            return {
-                isLoggedIn: !res.isLoggedIn
-            };
-        } 
-        return state
-    }
+function login_reducer(state = initialState, action) {
+    let res = action.payload
+    if (action.type === "userToken") {
+        return {
+            isLoggedIn: !res.isLoggedIn
+        };
+    } 
+    return state
+}
 
-    function firstName_reducer(state = initialState, action) {
-        let res = action.payload
-        if (action.type === "firstName") {
-            return {
-                firstName: res.firstName
-            };
-        } 
-        return state;
-    }
+function firstName_reducer(state = initialState, action) {
+    let res = action.payload
+    if (action.type === "firstName") {
+        return {
+            firstName: res.firstName
+        };
+    } 
+    return state;
+}
 
-    function lastName_reducer(state = initialState, action) {
-        let res = action.payload
-        if (action.type === "lastName") {
-            return {
-                lastName: res.lastName
-            };
-        } 
-        return state;
-    }
+function lastName_reducer(state = initialState, action) {
+    let res = action.payload
+    if (action.type === "lastName") {
+        return {
+            lastName: res.lastName
+        };
+    } 
+    return state;
+}
 
 export const store = configureStore({
     reducer : persistedReducer,

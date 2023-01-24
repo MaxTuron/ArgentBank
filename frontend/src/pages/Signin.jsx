@@ -23,7 +23,7 @@ export default function Signin() {
       dispatch(isLoggedIn());
       dispatch(userToken(response.body.token));
       }else{
-        alert("Nom d'utilisateur ou mot de passe incorect !")
+        alert("Incorrect username or password!")
       }
       navigate("/profile")
   }
